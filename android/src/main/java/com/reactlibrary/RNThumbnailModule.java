@@ -34,10 +34,17 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void get(String filePath, Promise promise) {
+  public void get(String filePath,String thumbPath, Promise promise) {
     filePath = filePath.replace("file://","");
+    String[] items = filePath.split("/");
+    File tempFile =new File(filePath.trim());
+
+    String fileName0 = tempFile.getName();
     Bitmap image = ThumbnailUtils.createVideoThumbnail(filePath, Thumbnails.MINI_KIND);
-    String fullPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    String fullPath = thumbPath;
+    if(fullPath == null || filePath.length() <=0) {
+      fullPath =  Environment.getExternalStorageDirectory().getAbsolutePath();
+    }
 
     try {
       File dir = new File(fullPath);
@@ -47,7 +54,7 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
 
       OutputStream fOut = null;
       // String fileName = "thumb-" + UUID.randomUUID().toString() + ".jpeg";
-      String fileName = "thumb-" + UUID.randomUUID().toString() + ".jpeg";
+      String fileName = fileName0 + ".jpeg";
       File file = new File(fullPath, fileName);
       file.createNewFile();
       fOut = new FileOutputStream(file);
