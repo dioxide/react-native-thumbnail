@@ -44,7 +44,7 @@ RCT_EXPORT_METHOD(get:(NSString *)filepath
 
         NSData *data = UIImageJPEGRepresentation(thumbnail, 1.0);
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *fullPath = [scheme stringByAppendingPathComponent: [NSString stringWithFormat:@"%@.jpg", fileName]];
+        NSString *fullPath = [scheme stringByAppendingPathComponent: [NSString stringWithFormat:@"%@.jpeg", fileName]];
         [fileManager createFileAtPath:fullPath contents:data attributes:nil];
         if (resolve)
             resolve(@{ @"path" : fullPath,
