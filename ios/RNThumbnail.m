@@ -3,6 +3,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVAsset.h>
 #import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 @implementation RNThumbnail
 
@@ -11,6 +12,12 @@
     return dispatch_get_main_queue();
 }
 RCT_EXPORT_MODULE()
+
+
+RCT_EXPORT_METHOD(setKeepScreenOn:(BOOL)screenShouldBeKeptOn)
+{
+    [[UIApplication sharedApplication] setIdleTimerDisabled:screenShouldBeKeptOn];
+}
 
 RCT_EXPORT_METHOD(get:(NSString *)filepath
                                thumbPath:(NSString*)thumbPath
