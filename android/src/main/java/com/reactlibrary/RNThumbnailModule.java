@@ -28,12 +28,25 @@ import android.provider.MediaStore.Images;
 
 public class RNThumbnailModule extends ReactContextBaseJavaModule {
 
+  /**
+   * Constant used to indicate the dimension of mini thumbnail.
+   * @hide Only used by media framework and media provider internally.
+   */
+  public static final int TARGET_SIZE_MINI_THUMBNAIL = 320;
+
+  /**
+   * Constant used to indicate the dimension of micro thumbnail.
+   * @hide Only used by media framework and media provider internally.
+   */
+  public static final int TARGET_SIZE_MICRO_THUMBNAIL = 96;
   private final ReactApplicationContext reactContext;
 
   public RNThumbnailModule(ReactApplicationContext reactContext) {
     super(reactContext);
     this.reactContext = reactContext;
   }
+
+
 
   @Override
   public String getName() {
@@ -63,6 +76,47 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
       }
     }
   }
+
+  public static Bitmap createVideoThumbnail(String filePath, int kind) {
+    Bitmap bitmap = null;
+    MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+    try {
+      retriever.setDataSource(filePath);
+      bitmap = retriever.getFrameAtTime(0);
+    } catch (IllegalArgumentException ex) {
+      // Assume this is a corrupt video file
+    } catch (RuntimeException ex) {
+      // Assume this is a corrupt video file.
+    } finally {
+      try {
+        retriever.release();
+      } catch (RuntimeException ex) {
+        // Ignore failures while cleaning up.
+      }
+    }
+
+    if (bitmap == null) return null;
+
+    if (kind == Images.Thumbnails.MINI_KIND) {
+      // Scale down the bitmap if it's too large.
+      int width = bitmap.getWidth();
+      int height = bitmap.getHeight();
+      int max = Math.max(width, height);
+      if (max > 512) {
+        float scale = 512f / max;
+        int w = Math.round(scale * width);
+        int h = Math.round(scale * height);
+        bitmap = Bitmap.createScaledBitmap(bitmap, w, h, true);
+      }
+    } else if (kind == Images.Thumbnails.MICRO_KIND) {
+      bitmap = ThumbnailUtils.extractThumbnail(bitmap,
+              TARGET_SIZE_MICRO_THUMBNAIL,
+              TARGET_SIZE_MICRO_THUMBNAIL,
+              ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+    }
+    return bitmap;
+  }
+
   @ReactMethod
   public void get(String filePath,String thumbPath, Promise promise) {
     if(filePath == null) {
@@ -75,10 +129,10 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
 
 
     try {
+
       File tempFile =new File(filePath.trim());
       String fileName0 = tempFile.getName();
-
-      Bitmap image = ThumbnailUtils.createVideoThumbnail(filePath, Thumbnails.MINI_KIND);
+      Bitmap image = createVideoThumbnail(filePath, Thumbnails.MINI_KIND);
       String fullPath = thumbPath;
       if(fullPath == null || filePath.length() <=0) {
         fullPath =  Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -112,7 +166,6 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
 
     }
     catch (Exception e) {
-
       //Log.e("E_RNThumnail_ERROR", e.getMessage());
       promise.reject("E_RNThumnail_ERROR", e.getMessage());
     }
