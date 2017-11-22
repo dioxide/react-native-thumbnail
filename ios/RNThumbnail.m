@@ -3,6 +3,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AVFoundation/AVAsset.h>
 #import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
 
 @implementation RNThumbnail
 
@@ -12,7 +13,15 @@
 }
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(get:(NSString *)filepath resolve:(RCTPromiseResolveBlock)resolve
+
+RCT_EXPORT_METHOD(setKeepScreenOn:(BOOL)screenShouldBeKeptOn)
+{
+    [[UIApplication sharedApplication] setIdleTimerDisabled:screenShouldBeKeptOn];
+}
+
+RCT_EXPORT_METHOD(get:(NSString *)filepath
+                               thumbPath:(NSString*)thumbPath
+                               resolve:(RCTPromiseResolveBlock)resolve
                                reject:(RCTPromiseRejectBlock)reject)
 {
     @try {
@@ -29,14 +38,20 @@ RCT_EXPORT_METHOD(get:(NSString *)filepath resolve:(RCTPromiseResolveBlock)resol
         
         CGImageRef imgRef = [generator copyCGImageAtTime:time actualTime:NULL error:&err];
         UIImage *thumbnail = [UIImage imageWithCGImage:imgRef];
-        // save to temp directory
-        NSString* tempDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,
-                                                                       NSUserDomainMask,
-                                                                       YES) lastObject];
         
+        NSString* scheme = thumbPath;
+        if(scheme == nil) {
+            scheme = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,
+                                                                           NSUserDomainMask,
+                                                                           YES) lastObject];
+        }
+        // save to temp directory
+      
+        NSString *fileName = [vidURL lastPathComponent];
+
         NSData *data = UIImageJPEGRepresentation(thumbnail, 1.0);
         NSFileManager *fileManager = [NSFileManager defaultManager];
-        NSString *fullPath = [tempDirectory stringByAppendingPathComponent: [NSString stringWithFormat:@"thumb-%@.jpg", [[NSProcessInfo processInfo] globallyUniqueString]]];
+        NSString *fullPath = [scheme stringByAppendingPathComponent: [NSString stringWithFormat:@"%@.jpeg", fileName]];
         [fileManager createFileAtPath:fullPath contents:data attributes:nil];
         if (resolve)
             resolve(@{ @"path" : fullPath,

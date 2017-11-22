@@ -3,8 +3,11 @@ package com.reactlibrary;
 
 import android.app.Activity;
 import android.app.Application;
+<<<<<<< HEAD
 import android.content.Intent;
 import android.net.Uri;
+=======
+>>>>>>> 5dc251800c7f90c51bbf61a160ad45c378f3824d
 import android.view.WindowManager;
 
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -88,6 +91,7 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
     }
   }
 
+<<<<<<< HEAD
   @ReactMethod
   public void playVideo(ReadableMap params){
     Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -147,6 +151,8 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
     getReactApplicationContext().startActivity(intent);
     //getReactApplicationContext().startActivityForResult(intent, 0, null); // 暂时使用当前应用的任务栈
   }
+=======
+>>>>>>> 5dc251800c7f90c51bbf61a160ad45c378f3824d
   public static Bitmap createVideoThumbnail(String filePath, int kind) {
     Bitmap bitmap = null;
     MediaMetadataRetriever retriever = new MediaMetadataRetriever();
