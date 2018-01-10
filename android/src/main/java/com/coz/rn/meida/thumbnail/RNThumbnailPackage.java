@@ -1,5 +1,5 @@
 
-package com.reactlibrary;
+package com.coz.rn.media.thumbnail;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -1,5 +1,5 @@
 
-package com.reactlibrary;
+package com.coz.rn.media.thumbnail;
 
 import android.app.Activity;
 import android.app.Application;
