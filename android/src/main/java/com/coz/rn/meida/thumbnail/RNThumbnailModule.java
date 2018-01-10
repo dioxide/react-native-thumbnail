@@ -57,7 +57,7 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
    * Constant used to indicate the dimension of mini thumbnail.
    * @hide Only used by media framework and media provider internally.
    */
-  public static final int TARGET_SIZE_MINI_THUMBNAIL = 320;
+  public static final int TARGET_SIZE_MINI_THUMBNAIL = 800;
 
   /**
    * Constant used to indicate the dimension of micro thumbnail.
