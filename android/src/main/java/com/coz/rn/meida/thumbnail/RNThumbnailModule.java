@@ -219,7 +219,7 @@ public class RNThumbnailModule extends ReactContextBaseJavaModule {
       Bitmap image = createVideoThumbnail(filePath, Thumbnails.MINI_KIND);
       String fullPath = thumbPath;
       if(fullPath == null || filePath.length() <=0) {
-        fullPath =  Environment.getExternalStorageDirectory().getAbsolutePath();
+        fullPath =  Environment.getExternalStorageDirectory().getAbsolutePath() + "/thumb";
       }
       File dir = new File(fullPath);
       if (!dir.exists()) {
