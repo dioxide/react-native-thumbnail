@@ -30,7 +30,7 @@ NSLog(@"videopath of your mov file = %@",movPath);
             AVAssetExportSession *exportSession = [[AVAssetExportSession alloc]initWithAsset:avAsset presetName:AVAssetExportPresetPassthrough];
             // save to temp directory
 
-            NSString* tempDirectory = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) lastObject];
+            NSString* tempDirectory = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) lastObject];
             NSLog(@"stating convert %@",tempDirectory);
             NSString *videoPath = [tempDirectory stringByAppendingPathComponent: [NSString stringWithFormat:@"%@.mp4", [[NSProcessInfo processInfo] globallyUniqueString]]];
 
